@@ -1,0 +1,10 @@
+resources:
+  - all.yaml
+
+patches:
+  - path: patch-deployment-substituted.yaml
+    target:
+      kind: Deployment
+  - path: patch-statefulset-substituted.yaml
+    target:
+      kind: StatefulSet

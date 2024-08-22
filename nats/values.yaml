@@ -1,0 +1,11 @@
+config:
+  cluster:
+    enabled: true
+
+  jetstream:
+    enabled: true
+
+natsBox:
+  container:
+    image:
+      tag: 0.14.4-nonroot

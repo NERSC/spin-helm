@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-box
+spec:
+  template:
+    spec:
+      securityContext:
+        fsGroup: FS_GROUP_PLACEHOLDER
+      containers:
+        - name: nats-box
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: RUN_AS_USER_PLACEHOLDER

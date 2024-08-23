@@ -5,7 +5,49 @@ config:
   jetstream:
     enabled: true
 
+  # Uncomment for external access through a websocket (outside NERSC)
+  # websocket:
+  #   enabled: true
+  #   port: 8080
+  #   ingress:
+  #     enabled: true
+  #     hosts:
+  #       - <your domain cname> # Replace with your domain
+  #       - ingress.<your-namespace>.production.svc.spin.nersc.org
+  #     path: /
+  #     pathType: Exact
+  #     className: nginx
+  #     tlsSecretName: tls-cert
+  #     name: ingress
+  #     merge:
+  #       metadata:
+  #         annotations:
+  #           nginx.ingress.kubernetes.io/whitelist-source-range: >-
+  #             128.55.206.0/24, 128.55.205.0/24, 128.55.64.0/18
+
 natsBox:
   container:
     image:
       tag: 0.14.4-nonroot
+# Uncomment to enable connections from within NERSC
+# extraResources:
+#   - apiVersion: v1
+#     kind: Service
+#     metadata:
+#       name: nats-external
+#       namespace: nats-helm-test
+#       labels:
+#         app.kubernetes.io/component: nats
+#         app.kubernetes.io/instance: nats
+#         app.kubernetes.io/managed-by: Helm
+#         app.kubernetes.io/name: nats
+#     spec:
+#       type: LoadBalancer
+#       selector:
+#         app.kubernetes.io/component: nats
+#         app.kubernetes.io/instance: nats
+#         app.kubernetes.io/name: nats
+#       ports:
+#         - name: nats
+#           port: 5672 # External port exposed by LoadBalancer
+#           targetPort: 4222 # Internal port on the NATS pods

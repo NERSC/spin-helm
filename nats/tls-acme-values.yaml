@@ -1,0 +1,21 @@
+replicaCount: 1
+
+podSecurityContext:
+  fsGroup: <gid> # NERSC GID for the project
+
+securityContext:
+  runAsUser: <uid> # NERSC UID
+
+service:
+  port: 8080
+
+ingress:
+  name: ingress
+  enabled: false
+
+# concatenate the list .ingress.hosts.host into ":" separated string
+domain: <your_domain_cname>:ingress.<your-namespace>.<development-or-production>.svc.spin.nersc.org
+
+email: <your_email> # email address to be used for the ACME account
+
+cluster: <development-or-production>.svc.spin.nersc.org

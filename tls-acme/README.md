@@ -129,7 +129,7 @@ Alternatively, you can trigger the CronJob via `kubectl`.
 # get the cronjob name
 kubectl get cronjob -n <namespace>
 # replace cronjob_name, and job_name below
-kubectl create job --from=cronjob/<cronjob_name> <job_name>
+kubectl create job -n <namespace> --from=cronjob/<cronjob_name> <job_name>
 ```
 
 It is recommended to "View Logs" while the triggered job is running, and verify the procedure is completed successfully.

@@ -65,4 +65,3 @@ spec:
               optional: false
               secretName: {{ .Values.kubeconfig.secretName }}
   schedule: {{ .Values.cronJob.schedule }}
-

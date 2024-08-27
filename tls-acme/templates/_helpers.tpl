@@ -66,7 +66,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Generate certificates for custom-metrics api server 
+Generate certificates for custom-metrics api server
 */}}
 {{- define "spin-acme.gen-certs" -}}
 {{- $altNames := list ( printf "%s.%s" (include "spin-acme.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "spin-acme.name" .) .Release.Namespace ) -}}

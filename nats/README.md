@@ -19,7 +19,7 @@ Clone the `spin-helm` repo (`git clone https://github.com/NERSC/spin-helm.git`),
 cd spin-helm/nats/kustomize
 # NOTE! you must set these
 export SPIN_GID=<gid> # NERSC GID for the project
-export SPIN_UID=<uid> # NERSC UID 
+export SPIN_UID=<uid> # NERSC UID
 helm upgrade --install -n <your-namespace> nats nats/nats --version 1.2.2 -f ../values.yaml --post-renderer ./kustomize.sh
 ```
 

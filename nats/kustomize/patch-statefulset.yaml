@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+spec:
+  template:
+    spec:
+      containers:
+        - name: nats
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: RUN_AS_USER_PLACEHOLDER
+        - name: reloader
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: RUN_AS_USER_PLACEHOLDER
+      securityContext:
+        fsGroup: FS_GROUP_PLACEHOLDER

@@ -66,12 +66,13 @@ In this case, the following conditions must be met:
 
 #### Clone the repo
 
-Clone this repository with `git clone https://github.com/dingp/spin-acme.git`.
+Clone this repository with `git clone https://github.com/NERSC/spin-helm.git`. Move into the
+`tls-acme` directory with `cd tls-acme`.
 
 The directory tree looks like the following:
 
 ```bash
-spin-acme
+tls-acme
 ├── charts
 ├── Chart.yaml
 ├── README.md

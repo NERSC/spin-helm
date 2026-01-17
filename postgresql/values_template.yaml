@@ -84,7 +84,7 @@ service:
   port: 5432
 
 persistentVolumeClaims:
-  testdb:
+  {{deployment_name}}:
     existing: false
     size: {{pvc_size}} # Update before installing.
 

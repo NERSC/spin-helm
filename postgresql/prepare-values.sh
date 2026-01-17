@@ -2,18 +2,18 @@
 set -euo pipefail
 
 base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-values_file="${1:-"${base_dir}/values.yaml"}"
-output_file="${2:-"${base_dir}/values.rendered.yaml"}"
+values_file="${1:-"${base_dir}/values_template.yaml"}"
+output_file="${2:-"${base_dir}/values.yaml"}"
 
 # Update these values before running this script.
-# Output goes to values.rendered.yaml unless you pass a second argument.
-nersc_user_id="75369"
-nersc_user_group="75369"
+# Output goes to values.yaml unless you pass a second argument.
+nersc_user_id="<nersc UID>"
+nersc_user_group="<nersc GID>"
 app_name="postgresql"
-version_tag="17"
-deployment_name="pqdb"
-db_name="science"
-db_user_password="pwialks;d"
+version_tag="18"
+deployment_name="psql"
+db_name="<DB_name>"
+db_user_password="<DB_password>"
 db_user_name="user"
 pvc_size="10Gi"
 

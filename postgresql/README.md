@@ -1,7 +1,7 @@
 # PostgreSQL Helm Chart
 
-This chart deploys PostgreSQL on Spin. Update the placeholders in `values.yaml`,
-or use the helper script to generate a rendered values file.
+This chart deploys PostgreSQL on Spin. Update the placeholders in
+`values_template.yaml`, or use the helper script to generate `values.yaml`.
 
 ## Prerequisites
 
@@ -19,27 +19,27 @@ See `tls-acme/README.md` for installation steps for kubectl/helm and kubeconfig.
 ./prepare-values.sh
 ```
 
-This writes `values.rendered.yaml` (or a custom path if you pass one).
+This writes `values.yaml` (or a custom path if you pass one).
 
 ## Quick start
 
 ```bash
 cd postgresql
 ./prepare-values.sh
-helm lint -f values.rendered.yaml .
-helm install -n <namespace> -f values.rendered.yaml <release-name> .
+helm lint .
+helm install -n <namespace> <release-name> .
 ```
 
 ## Install
 
 ```bash
-helm install -n <namespace> -f values.rendered.yaml <release-name> .
+helm install -n <namespace> <release-name> .
 ```
 
 ## Upgrade or uninstall
 
 ```bash
-helm upgrade -n <namespace> -f values.rendered.yaml <release-name> .
+helm upgrade -n <namespace> <release-name> .
 helm uninstall -n <namespace> <release-name>
 ```
 

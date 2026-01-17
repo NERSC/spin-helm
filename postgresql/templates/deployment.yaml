@@ -38,11 +38,20 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_DB
-              value: {{ .Values.env.POSTGRES_DB }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "postgresql.fullname" . }}-env
+                  key: POSTGRES_DB
             - name: POSTGRES_PASSWORD
-              value: {{ .Values.env.POSTGRES_PASSWORD }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "postgresql.fullname" . }}-env
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_USER
-              value: {{ .Values.env.POSTGRES_USER }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "postgresql.fullname" . }}-env
+                  key: POSTGRES_USER
             - name: TZ
               value: {{ .Values.env.TZ }}
             - name: PGDATA

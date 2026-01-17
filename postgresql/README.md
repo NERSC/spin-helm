@@ -21,6 +21,15 @@ See `tls-acme/README.md` for installation steps for kubectl/helm and kubeconfig.
 
 This writes `values.rendered.yaml` (or a custom path if you pass one).
 
+## Quick start
+
+```bash
+cd postgresql
+./prepare-values.sh
+helm lint -f values.rendered.yaml .
+helm install -n <namespace> -f values.rendered.yaml <release-name> .
+```
+
 ## Install
 
 ```bash

@@ -195,7 +195,7 @@ upgrade the installed chart by:
 
 ```bash
 ./prepare-values.sh
-helm upgrade -n <namespace> -f values.yaml <release-name> ./spin-acme
+helm upgrade -n <namespace> -f values.yaml <release-name> .
 ```
 
 Note the `<release-name>` should be the same one you used during initial installation. In the Case 2, if you've made modifications to the ingress after the initial Cronjob run, the modifications will be lost after upgrade, and will need to be re-applied. It's recommended that you backup the YAML for the ingress before the upgrade.

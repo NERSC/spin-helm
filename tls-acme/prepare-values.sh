@@ -7,14 +7,14 @@ output_file="${2:-"${base_dir}/values.yaml"}"
 
 # Update these values before running this script.
 # Output goes to values.yaml unless you pass a second argument.
-nersc_user_id="75369"
-nersc_user_group="75369"
+nersc_user_id="<your-uid>"
+nersc_user_group="<your-group-id>"
 service_port="8080"
 ingress_name="adminer" # <ingress_name>.<namespace>.<cluster>.svc.spin.nersc.org
-domain="nova-adminer.x2d2.net"
-domain_list="nova-adminer.x2d2.net:adminer.nova-ecl.production.svc.spin.nersc.org"
-email="pding@lbl.gov"
-cluster="production.svc.spin.nersc.org"
+domain="<your-domain>"
+domain_list="<your-domain>:<your-service-name>.<your-namespace>.<your-cluster-domain>"
+email="<your-email>"
+cluster="<your-cluster-domain>"
 use_case="case2"
 # case 1: use an existing web-server, specify the same port number used by the webserver's cluster IP.
 # case 2: no existing web-server, create one;

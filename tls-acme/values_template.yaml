@@ -46,7 +46,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    # you can have multiple hosts, all will be added to the same ingres,
+    # you can have multiple hosts, all will be added to the same ingress,
     # and use the same certificate (with DNS alias in SANs)
     - hosts:
         - {{domain}} # same as .ingress.hosts.host

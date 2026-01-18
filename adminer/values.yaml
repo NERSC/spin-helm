@@ -38,7 +38,8 @@ args:
 
 env:
   ADMINER_DESIGN: pepa-linha
-  ADMINER_DEFAULT_SERVER: postgres
+  # Name of the PostgreSQL Service in the same namespace; update before installing.
+  ADMINER_DEFAULT_SERVER: "<your-postgres-service-name>"
 
 service:
   type: ClusterIP

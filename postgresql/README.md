@@ -45,5 +45,5 @@ helm uninstall -n <namespace> <release-name>
 
 ## Notes
 
-- Persistent volume size is controlled by `persistentVolumeClaims.testdb.size`.
+- Persistent volume size is controlled by `persistentVolumeClaims.<deployment_name>.size` (where `deployment_name` defaults to `psql` in `prepare-values.sh`).
 - Liveness and readiness probes use `pg_isready` with the configured database name and user.

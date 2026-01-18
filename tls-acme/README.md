@@ -122,7 +122,7 @@ Install the helm chart with the following command. Replace `<namespace>` with yo
 
 ```bash
 ./prepare-values.sh
-helm install -n <namespace> -f values.yaml acmecron ./spin-acme
+helm install -n <namespace> -f values.yaml acmecron .
 ```
 
 #### Inspect the installation

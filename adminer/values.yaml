@@ -26,7 +26,8 @@ securityContext:
       - ALL
   privileged: false
   readOnlyRootFilesystem: false
-  runAsNonRoot: false
+  runAsNonRoot: true
+  runAsUser: 1000
 
 command:
   - php

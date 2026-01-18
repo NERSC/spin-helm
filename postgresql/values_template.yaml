@@ -1,0 +1,155 @@
+# Default values for postgresql.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# Update the placeholders below before installing the chart.
+# You can run ./prepare-values.sh to replace the {{placeholders}} in this file.
+# The script writes values.yaml for installation.
+
+# This will set the replicaset count more information can be found here:
+# https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+
+# This sets the container image more information can be found here:
+# https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: postgres
+  # This sets the pull policy for images.
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "{{version_tag}}"
+
+# This is for the secretes for pulling an image from a private repository more
+# information can be found here:
+# https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+# This is to override the chart name.
+nameOverride: "" # Update before installing.
+fullnameOverride: ""
+
+# This section builds out the service account more information can be found
+# here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use. If not set and create is true, a
+  # name is generated using the fullname template
+  name: ""
+
+# This is for setting Kubernetes Annotations to a Pod.
+# For more information checkout:
+# https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout:
+# https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+env:
+  # Update these values before installing.
+  POSTGRES_DB: {{db_name}}
+  POSTGRES_PASSWORD: {{db_user_password}}
+  POSTGRES_USER: {{db_user_name}}
+  TZ: US/Pacific
+  PGDATA: /var/lib/postgresql/data/pgdata
+
+podSecurityContext:
+  fsGroup: {{nersc_user_group}} # Update before installing.
+
+securityContext:
+  capabilities:
+    add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: {{nersc_user_id}} # Update before installing.
+
+# This is for setting up a service more information can be found here:
+# https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # This sets the service type more information can be found here:
+  # https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # This sets the ports more information can be found here:
+  # https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 5432
+
+persistentVolumeClaims:
+  data:
+    existing: false
+    size: {{pvc_size}} # Update before installing.
+
+# Additional volumeMounts on the output Deployment definition.
+volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: {{deployment_name}}
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts:
+  - mountPath: /var/lib/postgresql/data
+    name: data
+
+# This block is for setting up the ingress for more information can be found
+# here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as
+  # a conscious choice for the user. This also increases chances charts run on
+  # environments with little resources, such as Minikube. If you do want to
+  # specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after
+  # 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# This is to setup the liveness and readiness probes more information can be found here:
+# https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+# https://www.postgresql.org/docs/current/app-pg-isready.html
+livenessProbe:
+  exec:
+    command: ["pg_isready", "-U", "{{db_user_name}}", "-d", "{{db_name}}"]
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+readinessProbe:
+  exec:
+    # Check we can execute queries over TCP (skip-networking is off).
+    command: ["pg_isready", "-U", "{{db_user_name}}", "-d", "{{db_name}}"]
+  initialDelaySeconds: 5
+  periodSeconds: 2
+  timeoutSeconds: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

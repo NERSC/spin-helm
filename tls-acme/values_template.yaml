@@ -1,6 +1,9 @@
 # Default values for spin-acme.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+# Update the placeholders below before installing the chart.
+# You can run ./prepare-values.sh to replace the {{placeholders}} in this file.
+# The script writes values.yaml for installation.
 ---
 replicaCount: 1
 
@@ -18,7 +21,7 @@ podAnnotations: {}
 podLabels: {}
 
 podSecurityContext:
-  fsGroup: <gid> # NERSC GID for the project
+  fsGroup: {{nersc_user_group}} # NERSC GID for the project
 
 securityContext:
   capabilities:
@@ -26,38 +29,41 @@ securityContext:
       - ALL
   readOnlyRootFilesystem: false
   runAsNonRoot: true
-  runAsUser: <uid> # NERSC UID
+  runAsUser: {{nersc_user_id}} # NERSC UID
 
 service:
   type: ClusterIP
-  port: <port> # (case 1) port of the existing web server, or 8080 if no pre-existing web server (case 2)
+  port: {{service_port}} # (case 1) port of the existing web server, or 8080 if no pre-existing web server (case 2)
 
 ingress:
-  name: <ingress_name> # name of the ingress, which you already have a DNS CNAME record for.
+  name: {{ingress_name}} # name of the ingress, which you already have a DNS CNAME record for.
   enabled: true
   className: nginx
   hosts:
     # you can have multiple hosts, all will be added to the same ingress
-    - host: <domain> # DNS CNAME record, or <ingress_name>.<namespace>.<cluster>.svc.spin.nersc.org
+    - host: {{domain}} # DNS CNAME record, or <ingress_name>.<namespace>.<cluster>.svc.spin.nersc.org
       paths:
         - path: /
           pathType: Prefix
   tls:
-    # you can have multiple hosts, all will be added to the same ingres,
+    # you can have multiple hosts, all will be added to the same ingress,
     # and use the same certificate (with DNS alias in SANs)
     - hosts:
-        - <domain> # same as .ingress.hosts.host
+        - {{domain}} # same as .ingress.hosts.host
 
 # concatenate the list .ingress.hosts.host into ":" separated string
-domain: <domain(s)>
+domain: {{domain_list}}
 
-email: <email> # email address to be used for the ACME account
+email: {{email}} # email address to be used for the ACME account
 
-cluster: <cluster> # NERSC cluster name, development.svc.spin.nersc.org, or production.svc.spin.nersc.org
+cluster: {{cluster}} # NERSC cluster name, development.svc.spin.nersc.org, or production.svc.spin.nersc.org
+
+useCase: {{use_case}} # case1 uses existing web server, case2 creates a new one
 
 webServer:
   webrootPath: '/www'
-  existing: false # true for case 1; false for case 2 -- use existing deployment and PVC
+  # Set by prepare-values.sh based on use_case (case1 or case2).
+  existing: {{webserver_existing}} # true for case 1; false for case 2 -- use existing deployment and PVC
   deploymentName: existing-websrv # case 2, use this deployment
   claimName: pvc-existing-webroot # case 2, use this PVC
 

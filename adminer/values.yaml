@@ -1,0 +1,53 @@
+# Default values for adminer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# Update the placeholders below before installing the chart.
+
+replicaCount: 1
+
+image:
+  repository: adminer
+  pullPolicy: Always
+  tag: latest
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: <your NERSC UID>
+
+command:
+  - php
+args:
+  - "-S"
+  - "0.0.0.0:8080"
+  - "-t"
+  - "/var/www/html"
+
+env:
+  ADMINER_DESIGN: pepa-linha
+  # Name of the PostgreSQL Service in the same namespace; update before installing.
+  ADMINER_DEFAULT_SERVER: "<your-postgres-service-name>"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

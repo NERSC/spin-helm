@@ -55,6 +55,15 @@ kubectl -n <targeted_namespace> create secret generic kubeconfig --from-file=kub
 
 This helm chart takes consideration of two different usage cases. The installation procedure is different.
 
+### Quick start
+
+```bash
+cd tls-acme
+./prepare-values.sh
+helm lint .
+helm install -n <namespace> -f values.yaml acmecron .
+```
+
 ### Case 1
 
 In this case, the following conditions must be met:
@@ -84,14 +93,17 @@ tls-acme
 │   ├── service.yaml
 │   ├── webpvc.yaml
 │   └── websrv.yaml
+├── values_template.yaml
 └── values.yaml
 
-2 directories, 10 files
+2 directories, 11 files
 ```
 
 #### Customize values for chart installation
 
-Make a copy of `values.yaml`, and modify it by setting:
+Edit `values_template.yaml` by setting the placeholder values (including
+`useCase` for case1 vs case2), then run `./prepare-values.sh` to generate
+`values.yaml`.
 
 - `<uid>`
 - `<gid>`
@@ -109,7 +121,8 @@ Make a copy of `values.yaml`, and modify it by setting:
 Install the helm chart with the following command. Replace `<namespace>` with your namespace. `acmecron` is a release name for which you can name your own.
 
 ```bash
-helm install -n <namespace> -f modified-values.yaml acmecron ./spin-acme
+./prepare-values.sh
+helm install -n <namespace> -f values.yaml acmecron .
 ```
 
 #### Inspect the installation
@@ -151,7 +164,8 @@ This is applicatable to the usage cases like:
 
 #### Installation and inspection
 
-Similar as _Case 1_ above, but change the following in the copied `values.yaml`:
+Similar as _Case 1_ above, but change the following in `values_template.yaml`,
+set `useCase` to `case2`, and then re-run `./prepare-values.sh`:
 
 - `<uid>`
 - `<gid>`
@@ -176,10 +190,12 @@ During, the future cronjob runs, your modified ingress will be saved first, chan
 
 ### Upgrade or uninstall the chart
 
-If you made changes to `values.yml`, you can `upgrade` the installed chart by:
+If you made changes to `values_template.yaml`, re-run `./prepare-values.sh` and
+upgrade the installed chart by:
 
 ```bash
-helm upgrade -n <namespace> -f modified-values.yaml <release-name> ./spin-acme
+./prepare-values.sh
+helm upgrade -n <namespace> -f values.yaml <release-name> .
 ```
 
 Note the `<release-name>` should be the same one you used during initial installation. In the Case 2, if you've made modifications to the ingress after the initial Cronjob run, the modifications will be lost after upgrade, and will need to be re-applied. It's recommended that you backup the YAML for the ingress before the upgrade.

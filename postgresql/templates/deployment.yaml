@@ -38,17 +38,17 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "postgresql.fullname" . }}-env
+                  name: {{ include "postgresql.fullname" . }}-env-config
                   key: POSTGRES_DB
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "postgresql.fullname" . }}-env
+                  name: {{ include "postgresql.fullname" . }}-env-secret
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "postgresql.fullname" . }}-env
+                  name: {{ include "postgresql.fullname" . }}-env-config
                   key: POSTGRES_USER
             - name: TZ
               value: {{ .Values.env.TZ }}
@@ -70,11 +70,11 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
+            {{- tpl (toYaml .) $ | nindent 12 }}
           {{- end }}
       {{- with .Values.volumes }}
       volumes:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -27,7 +27,7 @@ securityContext:
   privileged: false
   readOnlyRootFilesystem: false
   runAsNonRoot: true
-  runAsUser: 1000
+  runAsUser: <your NERSC UID>
 
 command:
   - php

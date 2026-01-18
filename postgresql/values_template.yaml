@@ -23,8 +23,8 @@ image:
 # https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 # This is to override the chart name.
-nameOverride: "{{deployment_name}}" # Update before installing.
-fullnameOverride: "{{deployment_name}}" # Update before installing.
+nameOverride: "" # Update before installing.
+fullnameOverride: ""
 
 # This section builds out the service account more information can be found
 # here: https://kubernetes.io/docs/concepts/security/service-accounts/
@@ -84,20 +84,20 @@ service:
   port: 5432
 
 persistentVolumeClaims:
-  {{deployment_name}}:
+  data:
     existing: false
     size: {{pvc_size}} # Update before installing.
 
 # Additional volumeMounts on the output Deployment definition.
 volumes:
-  - name: {{deployment_name}}
+  - name: data
     persistentVolumeClaim:
       claimName: {{deployment_name}}
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
   - mountPath: /var/lib/postgresql/data
-    name: {{deployment_name}}
+    name: data
 
 # This block is for setting up the ingress for more information can be found
 # here: https://kubernetes.io/docs/concepts/services-networking/ingress/

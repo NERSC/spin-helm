@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ $vol.persistentVolumeClaim.claimName }}
+  name: {{ tpl $vol.persistentVolumeClaim.claimName $ }}
 spec:
   accessModes:
   - ReadWriteMany

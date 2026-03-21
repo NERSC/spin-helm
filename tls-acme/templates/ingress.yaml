@@ -37,7 +37,6 @@ spec:
         {{- range .hosts }}
         - {{ . | quote }}
         {{- end }}
-        - {{ $fullName }}.{{ $.Release.Namespace }}.{{ $.Values.cluster }}
       secretName: {{ $.Values.cert.secretName }}
     {{- end }}
   {{- end }}

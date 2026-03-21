@@ -130,8 +130,8 @@ helm install -n <namespace> -f values.yaml acmecron .
 The results of this installation are:
 
 1. A self-generated TLS certificate saved into a secret named `tls-cert`;
-2. A new ingress in the namespace, with rules for each of the domains, including the default Spin domain, pointing to the existing web server and its http port; the ingress will also use the self-generated certificate for all the domains;
-3. A cronjob which runs every two months to reuqest/renew a TLS certificate, and repalce the self-generated TLS certificate with it. The requested certificate will include all the listed domains in the ingress.
+2. A new ingress in the namespace, with rules for each of the domains, including the default Spin domain, pointing to the existing web server and its http port; the default Spin domain is intentionally not listed in the certificate SANs, so accessing it directly will show a certificate warning.
+3. A cronjob which runs every two months to reuqest/renew a TLS certificate, and repalce the self-generated TLS certificate with it. The requested certificate will include only the user-facing domains you list in `values.yaml`.
 
 #### Post installation setup (1)
 
@@ -178,7 +178,7 @@ set `useCase` to `case2`, and then re-run `./prepare-values.sh`:
 Different than _Case 1_, this installation of the chart will result in:
 
 1. A deployment of a simple web server, running on port 8080 internally;
-2. A new ingress in the namespace, pointing all of the domains, including the default Spin domain, to the newly created web server and its port 8080.
+2. A new ingress in the namespace, pointing all of the domains, including the default Spin domain, to the newly created web server and its port 8080. The default Spin domain remains outside the certificate SANs on purpose, so it shows a certificate warning if accessed directly.
 
 #### Post installation setup (2)
 

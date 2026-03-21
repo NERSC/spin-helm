@@ -40,18 +40,19 @@ ingress:
   enabled: true
   className: nginx
   hosts:
-    # you can have multiple hosts, all will be added to the same ingress
-    - host: {{domain}} # DNS CNAME record, or <ingress_name>.<namespace>.<cluster>.svc.spin.nersc.org
+    # you can have multiple user-facing hosts; the chart also adds the default Spin host
+    # <ingress_name>.<namespace>.<cluster> as an ingress-only route automatically.
+    - host: {{domain}} # DNS CNAME record that users should access directly
       paths:
         - path: /
           pathType: Prefix
   tls:
-    # you can have multiple hosts, all will be added to the same ingress,
-    # and use the same certificate (with DNS alias in SANs)
+    # List only the user-facing hosts that should be present in the certificate SANs.
+    # The default Spin host is intentionally excluded so it presents a certificate warning.
     - hosts:
         - {{domain}} # same as .ingress.hosts.host
 
-# concatenate the list .ingress.hosts.host into ":" separated string
+# concatenate only the certificate host list into a ":" separated string
 domain: {{domain_list}}
 
 email: {{email}} # email address to be used for the ACME account

@@ -59,8 +59,10 @@ This helm chart takes consideration of two different usage cases. The installati
 
 ```bash
 cd tls-acme
-./prepare-values.sh
-helm lint .
+cp prepare-values.yaml.example prepare-values.yaml
+# edit prepare-values.yaml
+python3 prepare-values.py
+helm lint . -f values.yaml
 helm install -n <namespace> -f values.yaml acmecron .
 ```
 
@@ -101,20 +103,27 @@ tls-acme
 
 #### Customize values for chart installation
 
-Edit `values_template.yaml` by setting the placeholder values (including
-`useCase` for case1 vs case2), then run `./prepare-values.sh` to generate
-`values.yaml`.
+Copy `prepare-values.yaml.example` to `prepare-values.yaml`, update the values there,
+and then run `python3 prepare-values.py` to generate `values.yaml` from `values_template.yaml`.
 
-- `<uid>`
-- `<gid>`
-- `<domain>` in `ingress.userDomains` (add more list entries if you want multiple CNAMEs on the same ingress and certificate)
-- `<email>`
-- `<port>`
-- `<ingress_name>`
-- `<cluster>` (can be `development.svc.spin.nersc.org` or `production.svc.spin.nersc.org`)
-- `existing-websrv`
-- `pvc-existing-webroot`
-- change `webServer.existing` field from `false` to `true`
+- `nersc_user_id`
+- `nersc_user_group`
+- `user_domains` as a YAML list of user-facing domains
+- `email`
+- `service_port`
+- `ingress_name`
+- `cluster` (can be `development.svc.spin.nersc.org` or `production.svc.spin.nersc.org`)
+- `use_case` (`case1` for an existing web server, `case2` to create one)
+- `webserver_existing` only if you want to override the value derived from `use_case`
+
+For multiple CNAMEs, list all of them in `user_domains`, for example:
+
+```yaml
+user_domains:
+  - app.example.org
+  - www.example.org
+  - api.example.org
+```
 
 #### Install the chart
 
@@ -164,16 +173,8 @@ This is applicatable to the usage cases like:
 
 #### Installation and inspection
 
-Similar as _Case 1_ above, but change the following in `values_template.yaml`,
-set `useCase` to `case2`, and then re-run `./prepare-values.sh`:
-
-- `<uid>`
-- `<gid>`
-- `<domain>` in `ingress.userDomains` (add more list entries if you want multiple CNAMEs on the same ingress and certificate)
-- `<email>`
-- `<port>` to `8080`
-- `<ingress_name>`
-- `<cluster>` (can be `development.svc.spin.nersc.org` or `production.svc.spin.nersc.org`)
+Similar as _Case 1_ above, but set `use_case` to `case2` in `prepare-values.yaml`,
+update the other config values as needed, and then re-run `python3 prepare-values.py`.
 
 Different than _Case 1_, this installation of the chart will result in:
 
@@ -190,8 +191,8 @@ During, the future cronjob runs, your modified ingress will be saved first, chan
 
 ### Upgrade or uninstall the chart
 
-If you made changes to `values_template.yaml`, re-run `./prepare-values.sh` and
-upgrade the installed chart by:
+If you made changes to `prepare-values.yaml` or `values_template.yaml`, re-run
+`python3 prepare-values.py` and upgrade the installed chart by:
 
 ```bash
 ./prepare-values.sh

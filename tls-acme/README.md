@@ -107,7 +107,7 @@ Edit `values_template.yaml` by setting the placeholder values (including
 
 - `<uid>`
 - `<gid>`
-- `<domain>`
+- `<domain>` in `ingress.userDomains` (add more list entries if you want multiple CNAMEs on the same ingress and certificate)
 - `<email>`
 - `<port>`
 - `<ingress_name>`
@@ -131,7 +131,7 @@ The results of this installation are:
 
 1. A self-generated TLS certificate saved into a secret named `tls-cert`;
 2. A new ingress in the namespace, with rules for each of the domains, including the default Spin domain, pointing to the existing web server and its http port; the default Spin domain is intentionally not listed in the certificate SANs, so accessing it directly will show a certificate warning.
-3. A cronjob which runs every two months to reuqest/renew a TLS certificate, and repalce the self-generated TLS certificate with it. The requested certificate will include only the user-facing domains you list in `values.yaml`.
+3. A cronjob which runs every two months to reuqest/renew a TLS certificate, and repalce the self-generated TLS certificate with it. The requested certificate will include only the user-facing domains listed in `ingress.userDomains`; the internal Spin hostname is added to the ingress automatically but excluded from the certificate.
 
 #### Post installation setup (1)
 
@@ -169,7 +169,7 @@ set `useCase` to `case2`, and then re-run `./prepare-values.sh`:
 
 - `<uid>`
 - `<gid>`
-- `<domain>`
+- `<domain>` in `ingress.userDomains` (add more list entries if you want multiple CNAMEs on the same ingress and certificate)
 - `<email>`
 - `<port>` to `8080`
 - `<ingress_name>`

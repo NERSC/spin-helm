@@ -12,7 +12,6 @@ nersc_user_group="<your-group-id>"
 service_port="8080"
 ingress_name="adminer" # <ingress_name>.<namespace>.<cluster>.svc.spin.nersc.org
 domain="<your-domain>"
-domain_list="<your-domain>"
 email="<your-email>"
 cluster="<your-cluster-domain>"
 use_case="case2"
@@ -31,7 +30,6 @@ sed \
   -e "s|{{service_port}}|${service_port}|g" \
   -e "s|{{ingress_name}}|${ingress_name}|g" \
   -e "s|{{domain}}|${domain}|g" \
-  -e "s|{{domain_list}}|${domain_list}|g" \
   -e "s|{{email}}|${email}|g" \
   -e "s|{{cluster}}|${cluster}|g" \
   -e "s|{{use_case}}|${use_case}|g" \

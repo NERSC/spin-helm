@@ -29,7 +29,7 @@ spec:
             - name: EMAIL
               value: {{ .Values.email }}
             - name: DOMAIN
-              value: {{ .Values.domain }}
+              value: {{ join ":" .Values.ingress.userDomains | quote }}
             - name: KUBECONFIG
               value: /kube/{{ .Values.kubeconfig.secretName }}
             - name: CERT_SECRET_NAME

@@ -1,10 +1,13 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := .Values.ingress.name -}}
+{{- $ingressName := .Values.ingress.name -}}
 {{- $depName := (printf "%s-websrv" (include "spin-acme.fullname" .)) -}}
 {{- if .Values.webServer.existing -}}
   {{- $depName = .Values.webServer.deploymentName -}}
 {{- end}}
 {{- $svcPort := .Values.service.port -}}
+{{- $userDomains := .Values.ingress.userDomains -}}
+{{- $spinDomain := printf "%s.%s.%s" $ingressName .Release.Namespace .Values.cluster -}}
+{{- $allIngressDomains := concat $userDomains (list $spinDomain) -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -19,7 +22,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $ingressName }}
   labels:
     {{- include "spin-acme.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -30,25 +33,22 @@ spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
-  {{- if .Values.ingress.tls }}
+  {{- if $userDomains }}
   tls:
-    {{- range .Values.ingress.tls }}
     - hosts:
-        {{- range .hosts }}
+        {{- range $userDomains }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ $.Values.cert.secretName }}
-    {{- end }}
+      secretName: {{ .Values.cert.secretName }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    {{- range $allIngressDomains }}
+    - host: {{ . | quote }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
-            pathType: {{ .pathType }}
+          - path: {{ $.Values.ingress.path }}
+            {{- if and $.Values.ingress.pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ $.Values.ingress.pathType }}
             {{- end }}
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
@@ -60,21 +60,5 @@ spec:
               serviceName: {{ $depName }}
               servicePort: {{ $svcPort }}
               {{- end }}
-          {{- end }}
     {{- end }}
-    - host: {{ $fullName }}.{{ .Release.Namespace }}.{{ .Values.cluster }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
-              service:
-                name: {{ $depName }}
-                port:
-                  number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $depName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
 {{- end }}

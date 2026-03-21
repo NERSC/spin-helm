@@ -44,7 +44,7 @@ ingress:
 
 email: {{ email }} # email address to be used for the ACME account
 
-cluster: {{ cluster }} # NERSC cluster name, development.svc.spin.nersc.org, or production.svc.spin.nersc.org
+cluster: {{ cluster }} # NERSC cluster name, development, production, development.svc.spin.nersc.org, or production.svc.spin.nersc.org
 
 useCase: {{ use_case }} # case1 uses existing web server, case2 creates a new one
 

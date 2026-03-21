@@ -16,7 +16,7 @@ podAnnotations: {}
 podLabels: {}
 
 podSecurityContext:
-  fsGroup: {{ nersc_user_group }} # NERSC GID for the project
+  fsGroup: 67890 # NERSC GID for the project
 
 securityContext:
   capabilities:
@@ -24,34 +24,33 @@ securityContext:
       - ALL
   readOnlyRootFilesystem: false
   runAsNonRoot: true
-  runAsUser: {{ nersc_user_id }} # NERSC UID
+  runAsUser: 12345 # NERSC UID
 
 service:
   type: ClusterIP
-  port: {{ service_port }} # (case 1) port of the existing web server, or 8080 if no pre-existing web server (case 2)
+  port: 8080 # (case 1) port of the existing web server, or 8080 if no pre-existing web server (case 2)
 
 ingress:
-  name: {{ ingress_name }} # name of the ingress, which you already have a DNS CNAME record for.
+  name: test-ingress # name of the ingress, which you already have a DNS CNAME record for.
   enabled: true
   className: nginx
   # User-facing domains only. The internal Spin hostname is derived automatically.
   userDomains:
-{% for domain in user_domains %}
-    - {{ domain }}
-{% endfor %}
+    - app.example.org
+    - www.example.org
   path: /
   pathType: Prefix
 
-email: {{ email }} # email address to be used for the ACME account
+email: user@example.org # email address to be used for the ACME account
 
-cluster: {{ cluster }} # NERSC cluster name, development, production, development.svc.spin.nersc.org, or production.svc.spin.nersc.org
+cluster: development.svc.spin.nersc.org # NERSC cluster name, development.svc.spin.nersc.org, or production.svc.spin.nersc.org
 
-useCase: {{ use_case }} # case1 uses existing web server, case2 creates a new one
+useCase: case2 # case1 uses existing web server, case2 creates a new one
 
 webServer:
   webrootPath: '/www'
   # Set from the config file, or derived by prepare-values.py from use_case.
-  existing: {{ webserver_existing | lower }} # true for case 1; false for case 2 -- use existing deployment and PVC
+  existing: false # true for case 1; false for case 2 -- use existing deployment and PVC
   deploymentName: existing-websrv # case 2, use this deployment
   claimName: pvc-existing-webroot # case 2, use this PVC
 

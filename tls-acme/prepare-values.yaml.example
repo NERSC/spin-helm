@@ -1,0 +1,13 @@
+# Copy this file to prepare-values.yaml and update the values for your deployment.
+nersc_user_id: 12345
+nersc_user_group: 67890
+service_port: 8080
+ingress_name: my-ingress
+email: user@email.com
+cluster: production
+use_case: case2
+# Optional override. If omitted, prepare-values.py derives it from use_case.
+# webserver_existing: false
+user_domains:
+  - app1.example1.com
+  - app1.example2.com

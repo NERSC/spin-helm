@@ -10,8 +10,8 @@ metadata:
     {{- include "postgresql.labels" . | nindent 4 }}
 spec:
   type: LoadBalancer
-  {{- with .Values.loadBalancer.allocateLoadBalancerNodePorts }}
-  allocateLoadBalancerNodePorts: {{ . }}
+  {{- if ne .Values.loadBalancer.allocateLoadBalancerNodePorts nil }}
+  allocateLoadBalancerNodePorts: {{ .Values.loadBalancer.allocateLoadBalancerNodePorts }}
   {{- end }}
   {{- with .Values.loadBalancer.externalTrafficPolicy }}
   externalTrafficPolicy: {{ . }}

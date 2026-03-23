@@ -2,14 +2,33 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "postgresql.fullname" . }}-lb
+  {{- with .Values.loadBalancer.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "postgresql.labels" . | nindent 4 }}
 spec:
   type: LoadBalancer
+  {{- if ne .Values.loadBalancer.allocateLoadBalancerNodePorts nil }}
+  allocateLoadBalancerNodePorts: {{ .Values.loadBalancer.allocateLoadBalancerNodePorts }}
+  {{- end }}
+  {{- with .Values.loadBalancer.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.loadBalancer.loadBalancerClass }}
+  loadBalancerClass: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.loadBalancer.loadBalancerIP }}
+  loadBalancerIP: {{ . | quote }}
+  {{- end }}
   ports:
-    - port: {{ .Values.service.port }}
+    - name: {{ .Values.loadBalancer.portName }}
+      port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
       protocol: TCP
-      name: {{ .Values.service.port }}tcp{{ .Values.service.port }}
+      {{- with .Values.loadBalancer.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
   selector:
     {{- include "postgresql.selectorLabels" . | nindent 4 }}

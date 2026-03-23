@@ -36,6 +36,16 @@ helm install -n <namespace> <release-name> .
 helm install -n <namespace> <release-name> .
 ```
 
+If your cluster requires LoadBalancer-specific annotations or a fixed IP, set
+them under `loadBalancer` in `values.yaml`. For example, Harvester DHCP-based
+address allocation can require:
+
+```yaml
+loadBalancer:
+  annotations:
+    cloudprovider.harvesterhci.io/ipam: dhcp
+```
+
 ## Upgrade or uninstall
 
 ```bash

@@ -83,6 +83,17 @@ service:
   # https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 5432
 
+loadBalancer:
+  # Add cluster-specific annotations here, for example:
+  # cloudprovider.harvesterhci.io/ipam: dhcp
+  annotations: {}
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Cluster
+  loadBalancerClass: ""
+  loadBalancerIP: ""
+  nodePort: null
+  portName: lb
+
 persistentVolumeClaims:
   data:
     existing: false
